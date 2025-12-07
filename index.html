@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REPETICIÓN MÁXIMA | Entrenamiento Personal por Marco</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@400;700;800&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-dark': '#111827',
+            'color-black' : '#000000',
+            'accent-vibrant': '#FF5722',
+            'light-gray'   : '#F3F4F6',
+            'base-white'   : '#FFFFFF',
+            'programs-bg'  : '#F8FAFC',
+            'tools-bg'     : '#EFF6FF',
+          },
+          fontFamily: {
+            sans: ['Inter','sans-serif'],
+            oswald: ['Oswald','sans-serif'],
+            montserrat: ['Montserrat','sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- SUPABASE SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <style>
+    /* Efecto Ribbon */
+    .ribbon {
+      position: absolute;
+      top: 15px;
+      right: -28px;
+      transform: rotate(45deg);
+      background-color: #FF5722;
+      color: white;
+      padding: 4px 40px;
+      font-weight: bold;
+      font-family: 'Oswald', sans-serif;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 10;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .cta-boost { transition: all 0.2s ease; }
+    .cta-boost:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2); }
+    
+    .program-card { transition: all 0.3s ease; }
+    .program-card:hover { border-color: #FF5722; transform: translateY(-2px); }
+
+    .levels-panel { display: none; opacity: 0; transition: opacity 0.3s ease; margin-top: 1rem; border-top: 1px dashed #e5e7eb; padding-top: 1rem; }
+    .levels-panel.active { display: block; opacity: 1; }
+    
+    html { scroll-behavior: smooth; }
+
+    /* CHATBOT WIDGET */
+    #chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; align-items: flex-end; }
+    #chat-window {
+      background: white; width: 360px; height: 550px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25); border-radius: 16px;
+      margin-bottom: 15px; display: none; flex-direction: column; overflow: hidden;
+      border: 1px solid #e5e7eb;
+    }
+    #chat-header { background: #111; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-family: 'Oswald', sans-serif; }
+    #chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc; font-size: 0.9rem; }
+    .chat-msg { margin-bottom: 10px; max-width: 90%; padding: 12px; border-radius: 12px; line-height: 1.4; font-size: 0.9rem; word-wrap: break-word; }
+    .bot-msg { background: #E2E8F0; color: #1e293b; border-bottom-left-radius: 2px; align-self: flex-start; }
+    .user-msg { background: #FF5722; color: white; border-bottom-right-radius: 2px; align-self: flex-end; margin-left: auto; }
+    
+    .typing-indicator { font-style: italic; color: #64748b; font-size: 0.8rem; margin-left: 5px; display: none; }
+    .bot-msg strong { font-weight: 700; color: #0f172a; }
+    .bot-msg ul { list-style-type: disc; padding-left: 20px; margin-top: 5px; }
+    
+    #login-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+
+    /* ESTILOS NUEVOS PARA EL VISOR DE PROGRAMAS */
+    .content-viewer { display: none; }
+    .content-viewer.active { display: block; animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* Loading Spinner */
+    .loader { border: 4px solid #f3f3f3; border-top: 4px solid #FF5722; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* --- CORRECCIÓN CRÍTICA DE FAQ (ACORDEÓN) --- */
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] summary .arrow-icon { transform: rotate(180deg); }
+    .arrow-icon { transition: transform 0.3s ease; display: inline-block; }
+    details[open] { background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-color: #e5e7eb; }
+  </style>
+</head>
+
+<body class="bg-base-white text-primary-dark font-sans flex flex-col min-h-screen">
+  
+  <div id="beta-banner" class="sticky top-0 z-[60] w-full bg-yellow-400 text-black shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-2 text-sm flex items-center justify-between gap-3">
+      <span class="font-bold uppercase tracking-wide text-xs md:text-sm">Sitio web 100% Funcional</span>
+      <div class="flex items-center gap-2">
+        <button onclick="document.getElementById('beta-banner').remove()" class="ml-2 px-2 py-1 hover:bg-black hover:text-yellow-400 transition rounded font-bold">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="header-placeholder" class="bg-black text-white sticky top-[36px] z-50 shadow-md"></div>
+
+  <section id="inicio" class="relative bg-black text-white text-center py-24 px-6 overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
+        <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-accent-vibrant blur-[120px] rounded-full"></div>
+    </div>
+    <div class="relative z-10 max-w-5xl mx-auto">
+      <h1 class="text-5xl sm:text-6xl md:text-8xl font-oswald font-extrabold mb-4 tracking-wide text-white leading-tight">
+        REPETICIÓN <br/> <span class="text-accent-vibrant">MÁXIMA</span>
+      </h1>
+      <p class="text-gray-400 font-montserrat font-bold tracking-[0.2em] uppercase text-sm mb-8">Prof. Marco Flores · Santiago, Chile</p>
+      <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+        Más que una rutina, una educación. Recomposición corporal basada en biomecánica, gestión de carga y 12 años de experiencia.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#programas" class="cta-button cta-boost inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-oswald font-bold bg-accent-vibrant text-white hover:bg-orange-600 uppercase tracking-wide min-w-[200px]">Ver Programas</a>
+        <button onclick="openLoginModal()" class="cta-button cta-boost inline-flex items-center justify-center px-8 py-4 border border-gray-700 rounded-lg text-lg font-oswald font-bold bg-transparent text-white hover:bg-white hover:text-black uppercase tracking-wide min-w-[200px] transition">Área Alumnos</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicios" class="py-20 bg-white border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-8">
+        <h2 class="text-4xl font-extrabold font-oswald uppercase text-primary-dark">Servicios de Coaching</h2>
+        <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">La diferencia está en el nivel de personalización. Tú eliges cuánto apoyo necesitas.</p>
+      </div>
+      <div class="max-w-lg mx-auto">
+         <article class="flex flex-col rounded-2xl shadow-xl bg-primary-dark text-white overflow-hidden relative transform hover:-translate-y-2 transition duration-300">
+            <div class="p-1 bg-accent-vibrant"></div>
+            <div class="p-8 flex flex-col h-full">
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold font-oswald mb-2 text-white">Asesoría 1 a 1</h3>
+                    <p class="text-accent-vibrant font-bold text-sm uppercase tracking-wider">La experiencia completa</p>
+                </div>
+                <p class="text-gray-300 text-sm mb-6 leading-relaxed flex-grow">
+                    Entrenamiento totalmente personalizado. Yo planifico cada variable (series, reps, RPE) y tú ejecutas. Incluye revisión técnica por video ilimitada.
+                </p>
+                <ul class="space-y-3 mb-8 text-sm text-gray-400">
+                    <li class="flex gap-2"><span class="text-accent-vibrant">✓</span> Planificación mensual en App</li>
+                    <li class="flex gap-2"><span class="text-accent-vibrant">✓</span> Feedback técnico (Video)</li>
+                    <li class="flex gap-2"><span class="text-accent-vibrant">✓</span> WhatsApp directo diario</li>
+                </ul>
+                <div class="mt-auto pt-6 border-t border-gray-700">
+                    <div class="text-3xl font-bold text-white mb-4 font-oswald">$60.000 <span class="text-sm font-sans font-normal text-gray-400">/ mes</span></div>
+                    <button onclick="buyLink('LINK_MP_ASESORIA')" class="w-full py-3 bg-accent-vibrant text-white font-bold rounded hover:bg-orange-600 uppercase font-oswald tracking-wide transition">Contratar</button>
+                </div>
+            </div>
+         </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="programas" class="py-20 bg-programs-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-extrabold font-oswald uppercase text-primary-dark">Elige tu Programa</h2>
+        <p class="mt-4 text-gray-600">Desde planificación progresiva hasta fuerza máxima.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Génesis -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 flex flex-col lg:col-span-3 md:flex-row items-center gap-6 hover:shadow-md transition">
+          <div class="flex-1 text-center md:text-left">
+            <div class="flex items-center justify-center md:justify-start gap-3 mb-2">
+                <h3 class="text-3xl font-bold font-oswald text-sky-600 uppercase">GÉNESIS</h3>
+                <span class="bg-sky-100 text-sky-800 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Gratuito</span>
+            </div>
+            <p class="text-gray-600 text-sm">El punto de partida. Un programa corto para que pruebes la metodología.</p>
+          </div>
+          <button onclick="alert('Regístrate en el Área de Alumnos para ver la demo interactiva.')" class="px-8 py-3 bg-sky-50 text-sky-700 font-bold border-2 border-sky-100 rounded-lg hover:bg-sky-600 hover:text-white transition uppercase font-oswald">Ver Demo Online</button>
+        </div>
+        <!-- Milón -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative overflow-hidden program-card flex flex-col">
+          <div class="absolute top-0 left-0 w-full h-1 bg-yellow-400"></div>
+          <div class="flex justify-between items-start mb-4">
+              <h3 class="text-2xl font-bold font-oswald text-gray-900 uppercase">MILON</h3>
+              <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded">Niveles 1-12</span>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">El estándar de oro. Desarrollo de fuerza base y musculatura funcional.</p>
+          <div class="space-y-3">
+            <button onclick="buyLink('LINK_MILON_N1')" class="w-full py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition uppercase font-oswald text-sm">Nivel 1 — $40.000</button>
+            <button onclick="toggleLevels('levels-milon')" class="w-full py-2 border border-gray-300 text-gray-600 font-bold rounded-lg text-xs hover:bg-gray-50 transition">Ver Packs de Ahorro</button>
+          </div>
+          <div id="levels-milon" class="levels-panel bg-yellow-50/50 rounded-lg p-3">
+            <button onclick="buyLink('LINK_MILON_P6')" class="w-full text-left p-2 text-xs font-bold text-gray-700 hover:bg-yellow-100 rounded mb-1">Pack 6 Niveles ($200.000)</button>
+            <button onclick="buyLink('LINK_MILON_P12')" class="w-full text-left p-2 text-xs font-bold text-gray-700 hover:bg-yellow-100 rounded">Pack 12 Niveles ($320.000)</button>
+          </div>
+        </div>
+        <!-- Afrodita -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative overflow-hidden program-card flex flex-col">
+          <div class="absolute top-0 left-0 w-full h-1 bg-pink-500"></div>
+          <div class="flex justify-between items-start mb-4">
+              <h3 class="text-2xl font-bold font-oswald text-gray-900 uppercase">AFRODITA</h3>
+              <span class="bg-pink-100 text-pink-800 text-xs font-bold px-2 py-1 rounded">Niveles 1-12</span>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Especialización en tren inferior. Foco en glúteos e isquiosurales.</p>
+          <div class="space-y-3">
+            <button onclick="buyLink('LINK_AFRODITA_N1')" class="w-full py-3 bg-pink-500 text-white font-bold rounded-lg hover:bg-pink-600 transition uppercase font-oswald text-sm">Nivel 1 — $40.000</button>
+            <button onclick="toggleLevels('levels-afrodita')" class="w-full py-2 border border-gray-300 text-gray-600 font-bold rounded-lg text-xs hover:bg-gray-50 transition">Ver Packs de Ahorro</button>
+          </div>
+          <div id="levels-afrodita" class="levels-panel bg-pink-50/50 rounded-lg p-3">
+            <button onclick="buyLink('LINK_AFRODITA_P6')" class="w-full text-left p-2 text-xs font-bold text-gray-700 hover:bg-pink-100 rounded mb-1">Pack 6 Niveles ($200.000)</button>
+            <button onclick="buyLink('LINK_AFRODITA_P12')" class="w-full text-left p-2 text-xs font-bold text-gray-700 hover:bg-pink-100 rounded">Pack 12 Niveles ($320.000)</button>
+          </div>
+        </div>
+        <!-- Hércules -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative overflow-hidden program-card flex flex-col">
+          <span class="ribbon">Pago Único</span>
+          <div class="absolute top-0 left-0 w-full h-1 bg-green-600"></div>
+          <div class="mb-4">
+              <h3 class="text-2xl font-bold font-oswald text-gray-900 uppercase">HÉRCULES</h3>
+              <p class="text-xs text-green-700 font-bold uppercase mt-1">Fuerza Máxima (SBD)</p>
+          </div>
+          <p class="text-sm text-gray-600 mb-4 flex-grow">Para quienes buscan aumentar su 1RM en SBD. Periodización avanzada tipo Peaking.</p>
+          <button onclick="buyLink('LINK_HERCULES')" class="w-full mt-4 py-3 border-2 border-green-600 text-green-700 font-bold rounded-lg hover:bg-green-600 hover:text-white transition uppercase font-oswald text-sm">Comprar — $50.000</button>
+        </div>
+        <!-- Kronos -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative overflow-hidden program-card flex flex-col">
+          <span class="ribbon">Pago Único</span>
+          <div class="absolute top-0 left-0 w-full h-1 bg-slate-600"></div>
+          <div class="mb-4">
+              <h3 class="text-2xl font-bold font-oswald text-gray-900 uppercase">KRONOS</h3>
+              <p class="text-xs text-slate-600 font-bold uppercase mt-1">Adulto Mayor (+60)</p>
+          </div>
+          <p class="text-sm text-gray-600 mb-4 flex-grow">Recupera funcionalidad, masa muscular y densidad ósea.</p>
+          <button onclick="buyLink('LINK_KRONOS')" class="w-full mt-4 py-3 border-2 border-slate-600 text-slate-600 font-bold rounded-lg hover:bg-slate-600 hover:text-white transition uppercase font-oswald text-sm">Comprar — $40.000</button>
+        </div>
+        <!-- Hermes -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative overflow-hidden program-card flex flex-col">
+          <span class="ribbon">Pago Único</span>
+          <div class="absolute top-0 left-0 w-full h-1 bg-cyan-600"></div>
+          <div class="mb-4">
+              <h3 class="text-2xl font-bold font-oswald text-gray-900 uppercase">HERMES</h3>
+              <p class="text-xs text-cyan-600 font-bold uppercase mt-1">Tiempo Reducido</p>
+          </div>
+          <p class="text-sm text-gray-600 mb-4 flex-grow">¿Solo tienes 30 minutos? Entrena intenso y eficiente.</p>
+          <button onclick="buyLink('LINK_HERMES')" class="w-full mt-4 py-3 border-2 border-cyan-600 text-cyan-700 font-bold rounded-lg hover:bg-cyan-600 hover:text-white transition uppercase font-oswald text-sm">Comprar — $15.000</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN HERRAMIENTAS (NUEVA) -->
+  <section id="herramientas" class="py-20 bg-tools-bg border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-extrabold font-oswald uppercase text-primary-dark">Herramientas Profesionales</h2>
+        <p class="mt-4 text-gray-600">Recursos para potenciar tu entrenamiento y gestión.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        
+        <!-- Calculadora 1RM -->
+        <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+          <h3 class="text-2xl font-bold font-oswald mb-4 text-primary-dark uppercase">Calculadora 1RM</h3>
+          <p class="text-sm text-gray-600 mb-6">Estima tu repetición máxima teórica basada en la fórmula de Epley. Útil para definir tus cargas de trabajo.</p>
+          
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Peso (kg)</label>
+              <input id="rm-peso" type="number" step="0.5" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-accent-vibrant outline-none" placeholder="Ej: 100">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Repeticiones</label>
+              <input id="rm-reps" type="number" min="1" max="12" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-accent-vibrant outline-none" placeholder="Ej: 5">
+            </div>
+          </div>
+          
+          <button onclick="calc1RM()" class="w-full py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition uppercase font-oswald">Calcular</button>
+          
+          <div id="rm-result" class="mt-6 hidden bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="text-center">
+              <span class="block text-xs text-gray-500 uppercase font-bold">Tu 1RM Estimado</span>
+              <span id="rm-value" class="text-4xl font-extrabold text-accent-vibrant">0 kg</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-4 text-center text-sm border-t pt-4">
+              <div><span class="block font-bold text-gray-900">90%</span><span id="rm-90" class="text-gray-600">0</span></div>
+              <div><span class="block font-bold text-gray-900">80%</span><span id="rm-80" class="text-gray-600">0</span></div>
+              <div><span class="block font-bold text-gray-900">70%</span><span id="rm-70" class="text-gray-600">0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bitácora del Coach -->
+        <div class="bg-primary-dark text-white rounded-xl shadow-lg p-8 relative overflow-hidden flex flex-col">
+          <div class="absolute top-0 right-0 bg-accent-vibrant text-white text-xs font-bold px-3 py-1 rounded-bl-xl uppercase">Solo Entrenadores</div>
+          <h3 class="text-2xl font-bold font-oswald mb-4 uppercase text-white">Bitácora del Coach</h3>
+          <p class="text-gray-400 text-sm mb-6 flex-grow">
+            La herramienta definitiva para gestionar alumnos. Centraliza planificaciones, monitorea cargas progresivas y visualiza el progreso de tus atletas en un solo lugar.
+          </p>
+          
+          <ul class="space-y-3 mb-8 text-sm text-gray-300">
+            <li class="flex gap-2"><span class="text-accent-vibrant">✓</span> Gestión de múltiples alumnos</li>
+            <li class="flex gap-2"><span class="text-accent-vibrant">✓</span> Registro de RPE y Volumen</li>
+            <li class="flex gap-2"><span class="text-accent-vibrant">✓</span> Gráficos de progreso</li>
+          </ul>
+
+          <div class="mt-auto flex items-center justify-between border-t border-gray-700 pt-6">
+            <div>
+              <span class="block text-2xl font-bold font-oswald">$9.900</span>
+              <span class="text-xs text-gray-400">/ mes</span>
+            </div>
+            <button onclick="openLoginModal()" class="px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition uppercase font-oswald text-sm">
+              Acceder al Panel
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="py-16 bg-white border-t border-gray-100">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-extrabold font-oswald uppercase text-primary-dark">Preguntas Frecuentes</h2>
+      </div>
+      <div class="space-y-4">
+        <!-- FAQ 1 -->
+        <details class="group p-5 rounded-lg border border-gray-200 bg-gray-50 transition cursor-pointer">
+          <summary class="font-bold flex justify-between items-center text-primary-dark select-none">
+            ¿Cómo accedo a mi programa después de pagar?
+            <span class="text-accent-vibrant arrow-icon">▼</span>
+          </summary>
+          <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+            Tras el pago en Mercado Pago, envíame el comprobante por WhatsApp. Activaré tu cuenta en el "Área de Alumnos" manualmente y podrás <strong>visualizar todo el programa directamente en la web</strong>. El acceso a programas comprados es de por vida en esta plataforma.
+          </p>
+        </details>
+
+        <!-- FAQ 2 -->
+        <details class="group p-5 rounded-lg border border-gray-200 bg-gray-50 transition cursor-pointer">
+          <summary class="font-bold flex justify-between items-center text-primary-dark select-none">
+            ¿Qué significan los "Niveles" en Milón y Afrodita?
+            <span class="text-accent-vibrant arrow-icon">▼</span>
+          </summary>
+          <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+            No son una escala de dificultad (donde el 1 es fácil y el 12 imposible). Son <strong>planificaciones progresivas</strong>. Cada nivel es un bloque de entrenamiento que prepara tu cuerpo para el siguiente. Se recomienda empezar por el Nivel 1 para construir la base.
+          </p>
+        </details>
+
+        <!-- FAQ 3 -->
+        <details class="group p-5 rounded-lg border border-gray-200 bg-gray-50 transition cursor-pointer">
+          <summary class="font-bold flex justify-between items-center text-primary-dark select-none">
+            ¿Es una suscripción mensual o pago único?
+            <span class="text-accent-vibrant arrow-icon">▼</span>
+          </summary>
+          <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+            <strong>Depende del servicio:</strong><br>
+            • <strong>Asesoría 1 a 1:</strong> Es mensual ($60.000/mes).<br>
+            • <strong>Programas (Milón/Afrodita):</strong> Pagas por nivel o pack. Una vez pagado, es tuyo para siempre.<br>
+            • <strong>Hércules/Kronos/Hermes:</strong> Es un pago único.
+          </p>
+        </details>
+
+        <!-- FAQ 4 -->
+        <details class="group p-5 rounded-lg border border-gray-200 bg-gray-50 transition cursor-pointer">
+          <summary class="font-bold flex justify-between items-center text-primary-dark select-none">
+            ¿Qué equipamiento necesito para entrenar en casa?
+            <span class="text-accent-vibrant arrow-icon">▼</span>
+          </summary>
+          <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+            Para las versiones "En Casa", lo mínimo es: un par de mancuernas ajustables, bandas elásticas y un mat. Si tienes barra y banco, mucho mejor. (Nota: El programa Hércules requiere gimnasio completo).
+          </p>
+        </details>
+
+        <!-- FAQ 5 -->
+        <details class="group p-5 rounded-lg border border-gray-200 bg-gray-50 transition cursor-pointer">
+          <summary class="font-bold flex justify-between items-center text-primary-dark select-none">
+            Tengo una lesión, ¿puedo tomar los programas?
+            <span class="text-accent-vibrant arrow-icon">▼</span>
+          </summary>
+          <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+            <strong>NO te lo recomiendo.</strong> Los programas enlatados son para personas sanas. Si tienes dolor, necesitas adaptación clínica. Contrata la <strong>Asesoría 1 a 1</strong> para que revise tu caso y adapte el entrenamiento.
+          </p>
+        </details>
+
+        <!-- FAQ 6 -->
+        <details class="group p-5 rounded-lg border border-gray-200 bg-gray-50 transition cursor-pointer">
+          <summary class="font-bold flex justify-between items-center text-primary-dark select-none">
+            ¿Cuánto duran las sesiones?
+            <span class="text-accent-vibrant arrow-icon">▼</span>
+          </summary>
+          <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+            • <strong>Milón / Afrodita / Hércules:</strong> 60 a 90 minutos.<br>
+            • <strong>Hermes (Express):</strong> 30 a 45 minutos máximo.
+          </p>
+        </details>
+
+        <!-- FAQ 7 -->
+        <details class="group p-5 rounded-lg border border-gray-200 bg-gray-50 transition cursor-pointer">
+          <summary class="font-bold flex justify-between items-center text-primary-dark select-none">
+            ¿Hay devoluciones?
+            <span class="text-accent-vibrant arrow-icon">▼</span>
+          </summary>
+          <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+            Al ser productos digitales de acceso inmediato (Acceso Web y videos), <strong>no se realizan devoluciones</strong> una vez habilitado el acceso. Si tienes dudas, prueba la demo "Génesis" primero.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-primary-dark text-white py-12 border-t border-gray-800 text-center">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-2xl font-oswald font-bold mb-2 tracking-wide">REPETICIÓN MÁXIMA</h2>
+      <p class="text-gray-500 text-sm mb-6">Ciencia aplicada a la fuerza.</p>
+      <div class="flex justify-center gap-6 text-sm text-gray-400">
+        <a href="https://wa.me/56948505747" target="_blank" class="hover:text-accent-vibrant transition">WhatsApp</a>
+        <a href="mailto:edfmarcoflores@gmail.com" class="hover:text-accent-vibrant transition">Email</a>
+      </div>
+      <p class="mt-8 text-xs text-gray-600">© 2025 Marco Flores. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- CHAT WIDGET REAL GEMINI + FALLBACK -->
+  <div id="chat-widget">
+    <div id="chat-window">
+      <div id="chat-header">
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            <span>Profe Virtual (IA)</span>
+        </div>
+        <button onclick="toggleChat()" class="text-white hover:text-gray-300 font-bold">✕</button>
+      </div>
+      <div id="chat-body">
+        <div class="chat-msg bot-msg">
+          ¡Hola! Soy el asistente IA de Marco. 🤖🧠<br><br>
+          Puedo responder <strong>cualquier duda</strong> sobre:<br>
+          • Biomecánica y Anatomía<br>
+          • Métodos (Westside, FST-7, Thibaudeau)<br>
+          • Sustituciones de ejercicios<br>
+          • Cálculos de RM y progresión<br><br>
+          ¡Pruébame! ¿Qué quieres saber?
+        </div>
+      </div>
+      <div id="typing" class="typing-indicator px-4 py-2">Escribiendo...</div>
+      <div class="p-3 bg-white border-t flex gap-2">
+        <input type="text" id="chat-input" placeholder="Pregunta lo que sea..." class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent-vibrant" onkeypress="handleChatInput(event)">
+        <button onclick="sendChat()" class="bg-accent-vibrant text-white px-4 py-2 rounded-lg font-bold hover:bg-orange-600 transition">➤</button>
+      </div>
+    </div>
+    <button onclick="toggleChat()" class="w-14 h-14 bg-black text-white rounded-full shadow-2xl flex items-center justify-center border-2 border-accent-vibrant hover:scale-110 transition group z-50">
+      <span class="text-3xl pb-1 group-hover:hidden">✨</span>
+      <span class="text-xs font-bold hidden group-hover:block text-accent-vibrant uppercase">IA</span>
+    </button>
+  </div>
+
+  <!-- MODAL LOGIN (CONECTADO A SUPABASE REAL) -->
+  <div id="login-modal">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-8 relative mx-4 animate-[fadeIn_0.3s_ease-out]">
+      <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black font-bold text-lg">✕</button>
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-oswald font-bold text-primary-dark">Área de Alumnos</h2>
+        <p class="text-xs text-gray-500 mt-1">Ingresa para ver tus programas reales.</p>
+      </div>
+      <!-- Login Form Real -->
+      <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+        <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-accent-vibrant outline-none transition" placeholder="tu@email.com">
+        <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-accent-vibrant outline-none transition" placeholder="••••••">
+        <button type="submit" class="w-full py-3 bg-primary-dark text-white font-bold font-oswald uppercase rounded-lg hover:bg-black transition shadow-lg flex justify-center items-center gap-2">
+          <span>Ingresar</span>
+          <div id="login-loader" class="loader hidden" style="width:16px; height:16px; border-width:2px;"></div>
+        </button>
+      </form>
+      <div id="login-error" class="text-red-500 text-xs text-center mt-2 hidden"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD / AREA DE ALUMNOS (REAL) -->
+  <div id="user-dashboard-mock" style="display:none;" class="fixed inset-0 bg-gray-50 z-[200] overflow-y-auto">
+    <div class="max-w-6xl mx-auto px-4 py-12">
+      <div class="flex justify-between items-center mb-8 border-b pb-4">
+        <div>
+            <h2 class="text-3xl font-oswald font-bold text-primary-dark">Mis Programas</h2>
+            <p id="user-welcome" class="text-sm text-gray-500">Cargando...</p>
+        </div>
+        <button onclick="logout()" class="text-red-600 font-bold text-sm hover:underline">Cerrar Sesión</button>
+      </div>
+      
+      <!-- Loading State -->
+      <div id="dashboard-loading" class="text-center py-20">
+        <div class="loader mb-4"></div>
+        <p>Buscando tus programas en la base de datos...</p>
+      </div>
+
+      <!-- 1. Lista de Programas (Se llena dinámicamente) -->
+      <div id="programs-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+        <!-- Inyectado por JS -->
+      </div>
+
+      <!-- Estado Vacío -->
+      <div id="empty-state" class="bg-white border rounded-xl p-12 text-center shadow-sm hidden">
+        <div class="inline-block p-4 rounded-full bg-gray-100 mb-4 text-3xl">📂</div>
+        <h3 class="font-bold text-xl mb-2">No tienes programas activos</h3>
+        <p class="text-gray-600 mb-6 max-w-md mx-auto">Si compraste hoy, recuerda que la activación manual puede tardar unas horas. Si ya pasó tiempo, contáctame por WhatsApp.</p>
+        <button onclick="document.getElementById('user-dashboard-mock').style.display='none'" class="px-6 py-2 bg-primary-dark text-white rounded font-bold hover:bg-black transition">Volver al sitio</button>
+      </div>
+
+      <!-- 2. Visor de Contenido -->
+      <div id="program-viewer" class="content-viewer bg-white rounded-xl shadow-lg border border-gray-200 mt-6 min-h-[500px]">
+        <div class="border-b px-6 py-4 flex justify-between items-center bg-gray-50 rounded-t-xl">
+          <h2 id="viewer-title" class="text-2xl font-oswald font-bold text-primary-dark">TITULO</h2>
+          <button onclick="closeViewer()" class="text-gray-500 hover:text-red-600 font-bold px-3 py-1 border rounded bg-white">✕ Cerrar</button>
+        </div>
+        <div class="p-8">
+          <div id="viewer-content" class="prose max-w-none text-gray-700"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- 1. CONFIGURACIÓN SUPABASE REAL ---
+    const SUPABASE_URL = "https://arwxqomdfquhkneufnnh.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyd3hxb21kZnF1aGtuZXVmbm5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyODc3MjUsImV4cCI6MjA3Nzg2MzcyNX0.ts0LsML3MBHAEptN9xmUdsFZDX7wETbbWvAVhtrtcqc";
+    
+    // Inicializar Cliente
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // --- 2. HEADER & MENÚ ---
+    const navHTML = `
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-black text-white h-[70px] flex justify-between items-center">
+        <div class="flex items-center">
+           <a href="#" class="font-oswald font-bold text-xl sm:text-2xl tracking-tighter text-white flex items-center gap-1 hover:opacity-90 transition">
+             REPETICIÓN<span class="text-accent-vibrant">MÁXIMA</span>
+           </a>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#inicio" class="text-sm font-semibold uppercase text-gray-300 hover:text-white transition">Inicio</a>
+          <a href="#servicios" class="text-sm font-semibold uppercase text-gray-300 hover:text-white transition">Servicios</a>
+          <a href="#programas" class="text-sm font-semibold uppercase text-gray-300 hover:text-white transition">Programas</a>
+          <!-- NUEVO ENLACE HERRAMIENTAS -->
+          <a href="#herramientas" class="text-sm font-semibold uppercase text-gray-300 hover:text-white transition">Herramientas</a>
+          
+          <button onclick="openLoginModal()" class="bg-white text-black px-5 py-2 rounded-full font-bold text-xs uppercase hover:bg-accent-vibrant hover:text-white transition shadow-lg transform hover:scale-105">Área Alumnos</button>
+        </div>
+        <div class="md:hidden flex items-center">
+          <button onclick="toggleMobileMenu()" class="text-white p-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+        </div>
+      </nav>
+      <div id="mobile-menu" class="hidden md:hidden bg-gray-900 border-t border-gray-800 absolute w-full left-0 z-50 shadow-xl">
+        <div class="flex flex-col p-6 space-y-6 text-center">
+          <a href="#inicio" class="text-lg text-white font-oswald uppercase" onclick="toggleMobileMenu()">Inicio</a>
+          <a href="#servicios" class="text-lg text-white font-oswald uppercase" onclick="toggleMobileMenu()">Servicios</a>
+          <a href="#programas" class="text-lg text-white font-oswald uppercase" onclick="toggleMobileMenu()">Programas</a>
+          <a href="#herramientas" class="text-lg text-white font-oswald uppercase" onclick="toggleMobileMenu()">Herramientas</a>
+          <button onclick="openLoginModal(); toggleMobileMenu()" class="text-accent-vibrant font-bold text-lg uppercase border border-accent-vibrant p-3 rounded-lg">Área Alumnos</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('header-placeholder').innerHTML = navHTML;
+    function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+    function buyLink(linkId) { alert("¡Botón funcional!\nPara cobrar, reemplaza '" + linkId + "' con tu link de Mercado Pago."); }
+    function toggleLevels(id) { document.getElementById(id).classList.toggle('active'); }
+
+    // --- 3. LÓGICA DE CALCULADORA 1RM ---
+    function calc1RM() {
+      const w = parseFloat(document.getElementById('rm-peso').value);
+      const r = parseInt(document.getElementById('rm-reps').value);
+      const res = document.getElementById('rm-result');
+      const val = document.getElementById('rm-value');
+      
+      if (!w || !r || r < 1) {
+        alert("Ingresa un peso y repeticiones válidas.");
+        return;
+      }
+      
+      // Epley Formula
+      const oneRM = Math.round(w * (1 + r / 30));
+      val.innerText = oneRM + " kg";
+      
+      document.getElementById('rm-90').innerText = Math.round(oneRM * 0.9) + " kg";
+      document.getElementById('rm-80').innerText = Math.round(oneRM * 0.8) + " kg";
+      document.getElementById('rm-70').innerText = Math.round(oneRM * 0.7) + " kg";
+      
+      res.classList.remove('hidden');
+    }
+
+    // --- 4. CONTENIDO DE PROGRAMAS ---
+    const programsContent = {
+      'milon': {
+        title: "MILÓN - NIVEL 1",
+        description: "Fuerza Base y Acondicionamiento.",
+        color: "yellow",
+        content: `<div class="p-4 bg-yellow-50 rounded border border-yellow-200"><h3 class="font-bold">Semana 1</h3><p>Contenido real del programa Milón...</p></div>`
+      },
+      'afrodita': {
+        title: "AFRODITA - NIVEL 1",
+        description: "Enfoque Glúteos.",
+        color: "pink",
+        content: `<div class="p-4 bg-pink-50 rounded border border-pink-200"><h3 class="font-bold">Semana 1</h3><p>Contenido real de Afrodita...</p></div>`
+      },
+      'genesis': {
+        title: "GÉNESIS (Demo)",
+        description: "Introducción al sistema.",
+        color: "sky",
+        content: `<div class="p-4 bg-sky-50 rounded border border-sky-200"><h3 class="font-bold">Rutina Base</h3><p>Contenido de prueba...</p></div>`
+      }
+    };
+
+    // --- 5. LÓGICA DE LOGIN Y BASE DE DATOS REAL ---
+    function openLoginModal() { 
+      document.getElementById('login-modal').style.display = 'flex'; 
+      document.getElementById('login-error').classList.add('hidden');
+    }
+    function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
+    
+    // LOGIN REAL CON SUPABASE
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const btn = e.target.querySelector('button');
+      const loader = document.getElementById('login-loader');
+      const errorMsg = document.getElementById('login-error');
+
+      // UI Loading
+      btn.disabled = true;
+      loader.classList.remove('hidden');
+      errorMsg.classList.add('hidden');
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        
+        if (error) throw error;
+
+        // Login Exitoso
+        closeLoginModal();
+        loadUserDashboard(data.user);
+
+      } catch (err) {
+        console.error("Login Error:", err);
+        errorMsg.innerText = "Error: " + (err.message === "Invalid login credentials" ? "Credenciales incorrectas" : err.message);
+        errorMsg.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        loader.classList.add('hidden');
+      }
+    }
+
+    // CARGAR DASHBOARD REAL
+    async function loadUserDashboard(user) {
+      const dashboard = document.getElementById('user-dashboard-mock');
+      const welcome = document.getElementById('user-welcome');
+      const list = document.getElementById('programs-list');
+      const loading = document.getElementById('dashboard-loading');
+      const empty = document.getElementById('empty-state');
+
+      dashboard.style.display = 'block';
+      welcome.innerText = `Hola, ${user.email}`;
+      loading.style.display = 'block';
+      list.style.display = 'none';
+      empty.style.display = 'none';
+      list.innerHTML = ''; // Limpiar lista anterior
+
+      try {
+        // CONSULTA REAL A SUPABASE
+        const { data: purchases, error } = await supabase
+          .from('purchases')
+          .select('program_id')
+          .eq('user_id', user.id);
+
+        if (error) throw error;
+
+        if (!purchases || purchases.length === 0) {
+          loading.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+        }
+
+        // RENDERIZAR PROGRAMAS COMPRADOS
+        purchases.forEach(p => {
+          const prog = programsContent[p.program_id];
+          if (prog) {
+            const card = document.createElement('div');
+            card.className = `bg-white border-l-4 border-${prog.color}-400 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer group`;
+            card.onclick = () => loadProgramContent(p.program_id);
+            card.innerHTML = `
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-xl font-oswald text-gray-800">${prog.title}</h3>
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">ACTIVO</span>
+              </div>
+              <p class="text-gray-600 text-sm mb-4">${prog.description}</p>
+              <span class="text-accent-vibrant text-sm font-bold group-hover:underline">Ver Contenido →</span>
+            `;
+            list.appendChild(card);
+          }
+        });
+
+        loading.style.display = 'none';
+        list.style.display = 'grid';
+
+      } catch (err) {
+        console.error("Error fetching purchases:", err);
+        loading.innerHTML = `<p class="text-red-500">Error cargando datos. Por favor recarga.</p>`;
+      }
+    }
+    
+    async function logout() {
+      await supabase.auth.signOut();
+      document.getElementById('user-dashboard-mock').style.display = 'none';
+      document.getElementById('programs-list').innerHTML = ''; // Limpiar seguridad
+    }
+
+    // --- 6. VISOR DE CONTENIDO ---
+    function loadProgramContent(programKey) {
+      const viewer = document.getElementById('program-viewer');
+      const list = document.getElementById('programs-list');
+      const title = document.getElementById('viewer-title');
+      const content = document.getElementById('viewer-content');
+      
+      const data = programsContent[programKey];
+      if(!data) return;
+
+      title.innerText = data.title;
+      content.innerHTML = data.content;
+
+      list.style.display = 'none';
+      viewer.classList.add('active');
+    }
+
+    function closeViewer() {
+      const viewer = document.getElementById('program-viewer');
+      const list = document.getElementById('programs-list');
+      viewer.classList.remove('active');
+      setTimeout(() => {
+         viewer.style.display = 'none';
+         list.style.display = 'grid';
+      }, 100); 
+    }
+
+    // --- 7. CHATBOT GEMINI + FALLBACK ---
+    function toggleChat() {
+      const win = document.getElementById('chat-window');
+      const isHidden = win.style.display === 'none' || win.style.display === '';
+      win.style.display = isHidden ? 'flex' : 'none';
+      if(isHidden) document.getElementById('chat-input').focus();
+    }
+    function handleChatInput(e) { if (e.key === 'Enter') sendChat(); }
+
+    async function sendChat() {
+      const input = document.getElementById('chat-input');
+      const userText = input.value.trim();
+      if(!userText) return;
+      
+      const body = document.getElementById('chat-body');
+      const typing = document.getElementById('typing');
+      
+      body.innerHTML += `<div class="chat-msg user-msg">${userText}</div>`;
+      input.value = '';
+      body.scrollTop = body.scrollHeight;
+      typing.style.display = 'block';
+
+      try {
+        const response = await callGemini(userText);
+        let formatted = response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        body.innerHTML += `<div class="chat-msg bot-msg">${formatted}</div>`;
+      } catch (error) {
+        const offlineResponse = getLocalBotResponse(userText);
+        body.innerHTML += `<div class="chat-msg bot-msg">${offlineResponse} <br><span class="text-xs text-gray-400 mt-2 block border-t pt-1">(Modo Offline)</span></div>`;
+      }
+      typing.style.display = 'none';
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function getLocalBotResponse(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes('precio')) return "Asesoría 1a1: $60k. Programas: $40k.";
+      return "Modo offline activo. Pregunta por precios.";
+    }
+
+    async function callGemini(prompt) {
+      const apiKey = ""; 
+      if(!apiKey) throw new Error("No API Key");
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+      const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+      const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if(!response.ok) throw new Error("API Error");
+      const data = await response.json();
+      return data.candidates[0].content.parts[0].text;
+    }
+  </script>
+</body>
+</html>
