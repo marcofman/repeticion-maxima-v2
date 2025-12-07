@@ -34,9 +34,6 @@
       },
     };
   </script>
-
-  <!-- SUPABASE SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
     /* Efecto Ribbon */
@@ -97,7 +94,7 @@
     .loader { border: 4px solid #f3f3f3; border-top: 4px solid #FF5722; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* --- CORRECCIÓN CRÍTICA DE FAQ (ACORDEÓN) --- */
+    /* FAQ acordeón */
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }
     details[open] summary .arrow-icon { transform: rotate(180deg); }
@@ -117,8 +114,10 @@
     </div>
   </div>
 
+  <!-- HEADER -->
   <div id="header-placeholder" class="bg-black text-white sticky top-[36px] z-50 shadow-md"></div>
 
+  <!-- HERO -->
   <section id="inicio" class="relative bg-black text-white text-center py-24 px-6 overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
         <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-accent-vibrant blur-[120px] rounded-full"></div>
@@ -133,11 +132,14 @@
       </p>
       <div class="flex flex-col sm:flex-row justify-center gap-4">
         <a href="#programas" class="cta-button cta-boost inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-oswald font-bold bg-accent-vibrant text-white hover:bg-orange-600 uppercase tracking-wide min-w-[200px]">Ver Programas</a>
-        <button onclick="openLoginModal()" class="cta-button cta-boost inline-flex items-center justify-center px-8 py-4 border border-gray-700 rounded-lg text-lg font-oswald font-bold bg-transparent text-white hover:bg-white hover:text-black uppercase tracking-wide min-w-[200px] transition">Área Alumnos</button>
+        <button onclick="openLoginModal()" class="cta-button cta-boost inline-flex items-center justify-center px-8 py-4 border border-gray-700 rounded-lg text-lg font-oswald font-bold bg-white text-black hover:bg-accent-vibrant hover:text-white uppercase tracking-wide min-w-[240px] transition">
+          👤 Entrar al Área de Alumnos
+        </button>
       </div>
     </div>
   </section>
 
+  <!-- SERVICIOS -->
   <section id="servicios" class="py-20 bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-8">
@@ -170,6 +172,7 @@
     </div>
   </section>
 
+  <!-- PROGRAMAS -->
   <section id="programas" class="py-20 bg-programs-bg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
@@ -259,7 +262,7 @@
     </div>
   </section>
 
-  <!-- SECCIÓN HERRAMIENTAS (NUEVA) -->
+  <!-- HERRAMIENTAS -->
   <section id="herramientas" class="py-20 bg-tools-bg border-t border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
@@ -320,7 +323,7 @@
               <span class="text-xs text-gray-400">/ mes</span>
             </div>
             <button onclick="openLoginModal()" class="px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition uppercase font-oswald text-sm">
-              Acceder al Panel
+              Entrar al Panel
             </button>
           </div>
         </div>
@@ -329,6 +332,7 @@
     </div>
   </section>
 
+  <!-- FAQ -->
   <section id="faq" class="py-16 bg-white border-t border-gray-100">
     <div class="max-w-4xl mx-auto px-4">
       <div class="text-center mb-12">
@@ -342,7 +346,7 @@
             <span class="text-accent-vibrant arrow-icon">▼</span>
           </summary>
           <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
-            Tras el pago en Mercado Pago, envíame el comprobante por WhatsApp. Activaré tu cuenta en el "Área de Alumnos" manualmente y podrás <strong>visualizar todo el programa directamente en la web</strong>. El acceso a programas comprados es de por vida en esta plataforma.
+            Tras el pago, me envías el comprobante por WhatsApp y activo tu usuario en el "Área de Alumnos". Desde ahí podrás <strong>ver tus programas directamente en la web</strong>. El acceso a programas comprados es de por vida en esta plataforma.
           </p>
         </details>
 
@@ -389,7 +393,7 @@
             <span class="text-accent-vibrant arrow-icon">▼</span>
           </summary>
           <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
-            <strong>NO te lo recomiendo.</strong> Los programas enlatados son para personas sanas. Si tienes dolor, necesitas adaptación clínica. Contrata la <strong>Asesoría 1 a 1</strong> para que revise tu caso y adapte el entrenamiento.
+            <strong>No es recomendable.</strong> Los programas enlatados son para personas sanas. Si tienes dolor, necesitas adaptación clínica. Contrata la <strong>Asesoría 1 a 1</strong> para revisar tu caso y adaptar el entrenamiento.
           </p>
         </details>
 
@@ -412,13 +416,14 @@
             <span class="text-accent-vibrant arrow-icon">▼</span>
           </summary>
           <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
-            Al ser productos digitales de acceso inmediato (Acceso Web y videos), <strong>no se realizan devoluciones</strong> una vez habilitado el acceso. Si tienes dudas, prueba la demo "Génesis" primero.
+            Al ser productos digitales de acceso inmediato (acceso web y videos), <strong>no se realizan devoluciones</strong> una vez habilitado el acceso. Si tienes dudas, prueba la demo "Génesis" primero.
           </p>
         </details>
       </div>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer class="bg-primary-dark text-white py-12 border-t border-gray-800 text-center">
     <div class="max-w-7xl mx-auto px-4">
       <h2 class="text-2xl font-oswald font-bold mb-2 tracking-wide">REPETICIÓN MÁXIMA</h2>
@@ -431,25 +436,25 @@
     </div>
   </footer>
 
-  <!-- CHAT WIDGET REAL GEMINI + FALLBACK -->
+  <!-- CHAT WIDGET -->
   <div id="chat-widget">
     <div id="chat-window">
       <div id="chat-header">
         <div class="flex items-center gap-2">
             <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            <span>Profe Virtual (IA)</span>
+            <span>Coach IA</span>
         </div>
         <button onclick="toggleChat()" class="text-white hover:text-gray-300 font-bold">✕</button>
       </div>
       <div id="chat-body">
         <div class="chat-msg bot-msg">
-          ¡Hola! Soy el asistente IA de Marco. 🤖🧠<br><br>
-          Puedo responder <strong>cualquier duda</strong> sobre:<br>
+          Hola, soy el asistente IA de Marco. 🤖🏋️<br><br>
+          Puedo responder <strong>dudas de entrenamiento</strong> sobre:<br>
           • Biomecánica y Anatomía<br>
           • Métodos (Westside, FST-7, Thibaudeau)<br>
           • Sustituciones de ejercicios<br>
           • Cálculos de RM y progresión<br><br>
-          ¡Pruébame! ¿Qué quieres saber?
+          Escribe tu pregunta cuando quieras.
         </div>
       </div>
       <div id="typing" class="typing-indicator px-4 py-2">Escribiendo...</div>
@@ -458,34 +463,48 @@
         <button onclick="sendChat()" class="bg-accent-vibrant text-white px-4 py-2 rounded-lg font-bold hover:bg-orange-600 transition">➤</button>
       </div>
     </div>
+
+    <!-- Botón flotante -->
     <button onclick="toggleChat()" class="w-14 h-14 bg-black text-white rounded-full shadow-2xl flex items-center justify-center border-2 border-accent-vibrant hover:scale-110 transition group z-50">
-      <span class="text-3xl pb-1 group-hover:hidden">✨</span>
-      <span class="text-xs font-bold hidden group-hover:block text-accent-vibrant uppercase">IA</span>
+      <span class="text-2xl pb-1 group-hover:hidden">🏋️</span>
+      <span class="text-[10px] font-bold hidden group-hover:block text-accent-vibrant uppercase">Coach IA</span>
     </button>
   </div>
 
-  <!-- MODAL LOGIN (CONECTADO A SUPABASE REAL) -->
+  <!-- MODAL LOGIN -->
   <div id="login-modal">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-8 relative mx-4 animate-[fadeIn_0.3s_ease-out]">
       <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black font-bold text-lg">✕</button>
       <div class="text-center mb-6">
         <h2 class="text-2xl font-oswald font-bold text-primary-dark">Área de Alumnos</h2>
-        <p class="text-xs text-gray-500 mt-1">Ingresa para ver tus programas reales.</p>
+        <p class="text-xs text-gray-500 mt-1">Ingresa para ver tus programas.</p>
       </div>
-      <!-- Login Form Real -->
+      <!-- Login Form -->
       <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
         <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-accent-vibrant outline-none transition" placeholder="tu@email.com">
-        <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-accent-vibrant outline-none transition" placeholder="••••••">
+        
+        <div class="relative">
+          <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-accent-vibrant outline-none transition pr-16" placeholder="••••••">
+          <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-3 text-xs font-semibold text-gray-500 hover:text-accent-vibrant">
+            Ver
+          </button>
+        </div>
+
         <button type="submit" class="w-full py-3 bg-primary-dark text-white font-bold font-oswald uppercase rounded-lg hover:bg-black transition shadow-lg flex justify-center items-center gap-2">
           <span>Ingresar</span>
           <div id="login-loader" class="loader hidden" style="width:16px; height:16px; border-width:2px;"></div>
         </button>
+
+        <div class="flex items-center justify-between text-xs text-gray-500 mt-1">
+          <button type="button" onclick="forgotPassword()" class="hover:text-accent-vibrant underline">Olvidé mi contraseña</button>
+          <button type="button" onclick="registerAccount()" class="hover:text-accent-vibrant underline">Registrarme</button>
+        </div>
       </form>
       <div id="login-error" class="text-red-500 text-xs text-center mt-2 hidden"></div>
     </div>
   </div>
 
-  <!-- DASHBOARD / AREA DE ALUMNOS (REAL) -->
+  <!-- DASHBOARD / AREA DE ALUMNOS -->
   <div id="user-dashboard-mock" style="display:none;" class="fixed inset-0 bg-gray-50 z-[200] overflow-y-auto">
     <div class="max-w-6xl mx-auto px-4 py-12">
       <div class="flex justify-between items-center mb-8 border-b pb-4">
@@ -499,10 +518,10 @@
       <!-- Loading State -->
       <div id="dashboard-loading" class="text-center py-20">
         <div class="loader mb-4"></div>
-        <p>Buscando tus programas en la base de datos...</p>
+        <p>Cargando tus programas...</p>
       </div>
 
-      <!-- 1. Lista de Programas (Se llena dinámicamente) -->
+      <!-- Lista de Programas -->
       <div id="programs-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
         <!-- Inyectado por JS -->
       </div>
@@ -515,7 +534,7 @@
         <button onclick="document.getElementById('user-dashboard-mock').style.display='none'" class="px-6 py-2 bg-primary-dark text-white rounded font-bold hover:bg-black transition">Volver al sitio</button>
       </div>
 
-      <!-- 2. Visor de Contenido -->
+      <!-- Visor de Contenido -->
       <div id="program-viewer" class="content-viewer bg-white rounded-xl shadow-lg border border-gray-200 mt-6 min-h-[500px]">
         <div class="border-b px-6 py-4 flex justify-between items-center bg-gray-50 rounded-t-xl">
           <h2 id="viewer-title" class="text-2xl font-oswald font-bold text-primary-dark">TITULO</h2>
@@ -529,19 +548,20 @@
     </div>
   </div>
 
+  <!-- SCRIPT PRINCIPAL (SIN SUPABASE) -->
   <script>
-    // --- 1. CONFIGURACIÓN SUPABASE REAL ---
-    const SUPABASE_URL = "https://arwxqomdfquhkneufnnh.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyd3hxb21kZnF1aGtuZXVmbm5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyODc3MjUsImV4cCI6MjA3Nzg2MzcyNX0.ts0LsML3MBHAEptN9xmUdsFZDX7wETbbWvAVhtrtcqc";
-    
-    // Inicializar Cliente
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // CONFIG LOGIN LOCAL
+    const ADMIN_EMAIL = "edfmarcoflores@gmail.com";
+    const ADMIN_PASSWORD = "Marco1234!";
+    const ADMIN_USER_ID = "f3944c87-02fe-40ae-b881-9b0b94477408";
 
-    // --- 2. HEADER & MENÚ ---
+    let currentUser = null;
+
+    // HEADER & MENÚ
     const navHTML = `
       <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-black text-white h-[70px] flex justify-between items-center">
         <div class="flex items-center">
-           <a href="#" class="font-oswald font-bold text-xl sm:text-2xl tracking-tighter text-white flex items-center gap-1 hover:opacity-90 transition">
+           <a href="#inicio" class="font-oswald font-bold text-xl sm:text-2xl tracking-tighter text-white flex items-center gap-1 hover:opacity-90 transition">
              REPETICIÓN<span class="text-accent-vibrant">MÁXIMA</span>
            </a>
         </div>
@@ -549,13 +569,17 @@
           <a href="#inicio" class="text-sm font-semibold uppercase text-gray-300 hover:text-white transition">Inicio</a>
           <a href="#servicios" class="text-sm font-semibold uppercase text-gray-300 hover:text-white transition">Servicios</a>
           <a href="#programas" class="text-sm font-semibold uppercase text-gray-300 hover:text-white transition">Programas</a>
-          <!-- NUEVO ENLACE HERRAMIENTAS -->
           <a href="#herramientas" class="text-sm font-semibold uppercase text-gray-300 hover:text-white transition">Herramientas</a>
-          
-          <button onclick="openLoginModal()" class="bg-white text-black px-5 py-2 rounded-full font-bold text-xs uppercase hover:bg-accent-vibrant hover:text-white transition shadow-lg transform hover:scale-105">Área Alumnos</button>
+          <button onclick="openLoginModal()" class="bg-white text-black px-5 py-2 rounded-full font-bold text-xs uppercase hover:bg-accent-vibrant hover:text-white transition shadow-lg transform hover:scale-105">
+            👤 Iniciar Sesión
+          </button>
         </div>
         <div class="md:hidden flex items-center">
-          <button onclick="toggleMobileMenu()" class="text-white p-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+          <button onclick="toggleMobileMenu()" class="text-white p-2">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
         </div>
       </nav>
       <div id="mobile-menu" class="hidden md:hidden bg-gray-900 border-t border-gray-800 absolute w-full left-0 z-50 shadow-xl">
@@ -564,16 +588,27 @@
           <a href="#servicios" class="text-lg text-white font-oswald uppercase" onclick="toggleMobileMenu()">Servicios</a>
           <a href="#programas" class="text-lg text-white font-oswald uppercase" onclick="toggleMobileMenu()">Programas</a>
           <a href="#herramientas" class="text-lg text-white font-oswald uppercase" onclick="toggleMobileMenu()">Herramientas</a>
-          <button onclick="openLoginModal(); toggleMobileMenu()" class="text-accent-vibrant font-bold text-lg uppercase border border-accent-vibrant p-3 rounded-lg">Área Alumnos</button>
+          <button onclick="openLoginModal(); toggleMobileMenu()" class="text-accent-vibrant font-bold text-lg uppercase border border-accent-vibrant p-3 rounded-lg">
+            Iniciar Sesión
+          </button>
         </div>
       </div>
     `;
     document.getElementById('header-placeholder').innerHTML = navHTML;
-    function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
-    function buyLink(linkId) { alert("¡Botón funcional!\nPara cobrar, reemplaza '" + linkId + "' con tu link de Mercado Pago."); }
-    function toggleLevels(id) { document.getElementById(id).classList.toggle('active'); }
 
-    // --- 3. LÓGICA DE CALCULADORA 1RM ---
+    function toggleMobileMenu() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+
+    function buyLink(linkId) {
+      alert("Botón de compra listo.\nEn producción reemplazas '" + linkId + "' por tu link real de pago.");
+    }
+
+    function toggleLevels(id) {
+      document.getElementById(id).classList.toggle('active');
+    }
+
+    // CALCULADORA 1RM
     function calc1RM() {
       const w = parseFloat(document.getElementById('rm-peso').value);
       const r = parseInt(document.getElementById('rm-reps').value);
@@ -585,7 +620,6 @@
         return;
       }
       
-      // Epley Formula
       const oneRM = Math.round(w * (1 + r / 30));
       val.innerText = oneRM + " kg";
       
@@ -596,61 +630,148 @@
       res.classList.remove('hidden');
     }
 
-    // --- 4. CONTENIDO DE PROGRAMAS ---
+    // CONTENIDO DE PROGRAMAS PARA EL DASHBOARD
     const programsContent = {
-      'milon': {
-        title: "MILÓN - NIVEL 1",
-        description: "Fuerza Base y Acondicionamiento.",
-        color: "yellow",
-        content: `<div class="p-4 bg-yellow-50 rounded border border-yellow-200"><h3 class="font-bold">Semana 1</h3><p>Contenido real del programa Milón...</p></div>`
+      genesis: {
+        title: "GÉNESIS",
+        description: "Programa base para aprender la metodología Repetición Máxima.",
+        colorClass: "border-sky-400",
+        html: `
+          <h3 class="font-oswald text-2xl mb-4">Génesis - Introducción</h3>
+          <p class="mb-4">Bloque de 4 semanas enfocado en técnica y adaptación estructural.</p>
+          <ul class="list-disc pl-6 space-y-1">
+            <li>3 días por semana</li>
+            <li>Enfoque full body</li>
+            <li>Ideal para principiantes o retorno al entrenamiento</li>
+          </ul>
+        `
       },
-      'afrodita': {
-        title: "AFRODITA - NIVEL 1",
-        description: "Enfoque Glúteos.",
-        color: "pink",
-        content: `<div class="p-4 bg-pink-50 rounded border border-pink-200"><h3 class="font-bold">Semana 1</h3><p>Contenido real de Afrodita...</p></div>`
+      milon_n1: {
+        title: "MILÓN · Nivel 1",
+        description: "Construcción de base de fuerza y técnica.",
+        colorClass: "border-yellow-400",
+        html: `
+          <h3 class="font-oswald text-2xl mb-4">Milón · Nivel 1</h3>
+          <p class="mb-4">Primer bloque de fuerza general. Objetivo: dominar patrones básicos.</p>
+          <p>Duración: 4 semanas · 4 días/semana.</p>
+        `
       },
-      'genesis': {
-        title: "GÉNESIS (Demo)",
-        description: "Introducción al sistema.",
-        color: "sky",
-        content: `<div class="p-4 bg-sky-50 rounded border border-sky-200"><h3 class="font-bold">Rutina Base</h3><p>Contenido de prueba...</p></div>`
+      milon_n2: {
+        title: "MILÓN · Nivel 2",
+        description: "Intensificación de fuerza y volumen.",
+        colorClass: "border-yellow-400",
+        html: `<p>Contenido del Nivel 2 (placeholder).</p>`
+      },
+      milon_n3: {
+        title: "MILÓN · Nivel 3",
+        description: "Fuerza pura, rangos de repeticiones bajos.",
+        colorClass: "border-yellow-400",
+        html: `<p>Contenido del Nivel 3 (placeholder).</p>`
+      },
+      milon_n4: {
+        title: "MILÓN · Nivel 4",
+        description: "Peaking, preparación para test de 1RM.",
+        colorClass: "border-yellow-400",
+        html: `<p>Contenido del Nivel 4 (placeholder).</p>`
+      },
+      afrodita_n1: {
+        title: "AFRODITA · Nivel 1",
+        description: "Activación de glúteos y piernas, foco técnico.",
+        colorClass: "border-pink-400",
+        html: `<p>Contenido Afrodita Nivel 1 (placeholder).</p>`
+      },
+      afrodita_n2: {
+        title: "AFRODITA · Nivel 2",
+        description: "Hipertrofia con volumen moderado.",
+        colorClass: "border-pink-400",
+        html: `<p>Contenido Afrodita Nivel 2 (placeholder).</p>`
+      },
+      afrodita_n3: {
+        title: "AFRODITA · Nivel 3",
+        description: "Densidad de entrenamiento aumentada.",
+        colorClass: "border-pink-400",
+        html: `<p>Contenido Afrodita Nivel 3 (placeholder).</p>`
+      },
+      afrodita_n4: {
+        title: "AFRODITA · Nivel 4",
+        description: "Definición y refinamiento.",
+        colorClass: "border-pink-400",
+        html: `<p>Contenido Afrodita Nivel 4 (placeholder).</p>`
+      },
+      hercules: {
+        title: "HÉRCULES",
+        description: "Ciclo de fuerza máxima para SBD.",
+        colorClass: "border-green-500",
+        html: `<p>Planificación avanzada para powerlifting (placeholder).</p>`
+      },
+      kronos: {
+        title: "KRONOS",
+        description: "Programa de fuerza y funcionalidad para +60.",
+        colorClass: "border-slate-500",
+        html: `<p>Contenido Kronos (placeholder).</p>`
+      },
+      hermes: {
+        title: "HERMES",
+        description: "Entrenamiento express de 30 minutos.",
+        colorClass: "border-cyan-500",
+        html: `<p>Rutinas cortas de alta eficiencia (placeholder).</p>`
       }
     };
 
-    // --- 5. LÓGICA DE LOGIN Y BASE DE DATOS REAL ---
-    function openLoginModal() { 
-      document.getElementById('login-modal').style.display = 'flex'; 
+    const ADMIN_PROGRAM_IDS = Object.keys(programsContent);
+
+    // LOGIN MODAL
+    function openLoginModal() {
+      document.getElementById('login-modal').style.display = 'flex';
       document.getElementById('login-error').classList.add('hidden');
     }
-    function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
-    
-    // LOGIN REAL CON SUPABASE
+
+    function closeLoginModal() {
+      document.getElementById('login-modal').style.display = 'none';
+    }
+
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+    }
+
+    function forgotPassword() {
+      alert("Por ahora, si olvidaste tu contraseña escríbeme por WhatsApp y te la reseteo manualmente.");
+    }
+
+    function registerAccount() {
+      alert("El registro de alumnos lo gestiono yo de forma manual. Si quieres una cuenta, envíame un mensaje por WhatsApp.");
+    }
+
     async function handleLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const btn = e.target.querySelector('button');
-      const loader = document.getElementById('login-loader');
-      const errorMsg = document.getElementById('login-error');
 
-      // UI Loading
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('login-error');
+      const btn = e.target.querySelector('button[type=\"submit\"]');
+      const loader = document.getElementById('login-loader');
+
       btn.disabled = true;
       loader.classList.remove('hidden');
       errorMsg.classList.add('hidden');
 
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        
-        if (error) throw error;
-
-        // Login Exitoso
-        closeLoginModal();
-        loadUserDashboard(data.user);
-
+        if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
+          currentUser = {
+            id: ADMIN_USER_ID,
+            email: ADMIN_EMAIL
+          };
+          closeLoginModal();
+          await loadUserDashboard(currentUser);
+        } else {
+          errorMsg.innerText = "Error: Credenciales incorrectas";
+          errorMsg.classList.remove('hidden');
+        }
       } catch (err) {
-        console.error("Login Error:", err);
-        errorMsg.innerText = "Error: " + (err.message === "Invalid login credentials" ? "Credenciales incorrectas" : err.message);
+        console.error("Login error:", err);
+        errorMsg.innerText = "Error inesperado al iniciar sesión";
         errorMsg.classList.remove('hidden');
       } finally {
         btn.disabled = false;
@@ -658,7 +779,6 @@
       }
     }
 
-    // CARGAR DASHBOARD REAL
     async function loadUserDashboard(user) {
       const dashboard = document.getElementById('user-dashboard-mock');
       const welcome = document.getElementById('user-welcome');
@@ -671,58 +791,46 @@
       loading.style.display = 'block';
       list.style.display = 'none';
       empty.style.display = 'none';
-      list.innerHTML = ''; // Limpiar lista anterior
+      list.innerHTML = '';
 
-      try {
-        // CONSULTA REAL A SUPABASE
-        const { data: purchases, error } = await supabase
-          .from('purchases')
-          .select('program_id')
-          .eq('user_id', user.id);
+      // Como admin, ves todos los programas
+      const purchases = ADMIN_PROGRAM_IDS;
 
-        if (error) throw error;
-
-        if (!purchases || purchases.length === 0) {
-          loading.style.display = 'none';
-          empty.style.display = 'block';
-          return;
-        }
-
-        // RENDERIZAR PROGRAMAS COMPRADOS
-        purchases.forEach(p => {
-          const prog = programsContent[p.program_id];
-          if (prog) {
-            const card = document.createElement('div');
-            card.className = `bg-white border-l-4 border-${prog.color}-400 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer group`;
-            card.onclick = () => loadProgramContent(p.program_id);
-            card.innerHTML = `
-              <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-xl font-oswald text-gray-800">${prog.title}</h3>
-                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">ACTIVO</span>
-              </div>
-              <p class="text-gray-600 text-sm mb-4">${prog.description}</p>
-              <span class="text-accent-vibrant text-sm font-bold group-hover:underline">Ver Contenido →</span>
-            `;
-            list.appendChild(card);
-          }
-        });
-
+      if (!purchases || purchases.length === 0) {
         loading.style.display = 'none';
-        list.style.display = 'grid';
-
-      } catch (err) {
-        console.error("Error fetching purchases:", err);
-        loading.innerHTML = `<p class="text-red-500">Error cargando datos. Por favor recarga.</p>`;
+        empty.style.display = 'block';
+        return;
       }
-    }
-    
-    async function logout() {
-      await supabase.auth.signOut();
-      document.getElementById('user-dashboard-mock').style.display = 'none';
-      document.getElementById('programs-list').innerHTML = ''; // Limpiar seguridad
+
+      purchases.forEach(id => {
+        const prog = programsContent[id];
+        if (!prog) return;
+
+        const card = document.createElement('div');
+        card.className = `bg-white border-l-4 ${prog.colorClass} rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer group`;
+        card.onclick = () => loadProgramContent(id);
+        card.innerHTML = `
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-xl font-oswald text-gray-800">${prog.title}</h3>
+            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">ACTIVO</span>
+          </div>
+          <p class="text-gray-600 text-sm mb-4">${prog.description}</p>
+          <span class="text-accent-vibrant text-sm font-bold group-hover:underline">Ver Contenido →</span>
+        `;
+        list.appendChild(card);
+      });
+
+      loading.style.display = 'none';
+      list.style.display = 'grid';
     }
 
-    // --- 6. VISOR DE CONTENIDO ---
+    function logout() {
+      currentUser = null;
+      document.getElementById('user-dashboard-mock').style.display = 'none';
+      document.getElementById('programs-list').innerHTML = '';
+    }
+
+    // VISOR DE CONTENIDO
     function loadProgramContent(programKey) {
       const viewer = document.getElementById('program-viewer');
       const list = document.getElementById('programs-list');
@@ -730,13 +838,14 @@
       const content = document.getElementById('viewer-content');
       
       const data = programsContent[programKey];
-      if(!data) return;
+      if (!data) return;
 
       title.innerText = data.title;
-      content.innerHTML = data.content;
+      content.innerHTML = data.html;
 
       list.style.display = 'none';
       viewer.classList.add('active');
+      viewer.style.display = 'block';
     }
 
     function closeViewer() {
@@ -744,24 +853,27 @@
       const list = document.getElementById('programs-list');
       viewer.classList.remove('active');
       setTimeout(() => {
-         viewer.style.display = 'none';
-         list.style.display = 'grid';
-      }, 100); 
+        viewer.style.display = 'none';
+        list.style.display = 'grid';
+      }, 100);
     }
 
-    // --- 7. CHATBOT GEMINI + FALLBACK ---
+    // CHATBOT (modo offline por defecto)
     function toggleChat() {
       const win = document.getElementById('chat-window');
       const isHidden = win.style.display === 'none' || win.style.display === '';
       win.style.display = isHidden ? 'flex' : 'none';
-      if(isHidden) document.getElementById('chat-input').focus();
+      if (isHidden) document.getElementById('chat-input').focus();
     }
-    function handleChatInput(e) { if (e.key === 'Enter') sendChat(); }
+
+    function handleChatInput(e) {
+      if (e.key === 'Enter') sendChat();
+    }
 
     async function sendChat() {
       const input = document.getElementById('chat-input');
       const userText = input.value.trim();
-      if(!userText) return;
+      if (!userText) return;
       
       const body = document.getElementById('chat-body');
       const typing = document.getElementById('typing');
@@ -771,33 +883,30 @@
       body.scrollTop = body.scrollHeight;
       typing.style.display = 'block';
 
-      try {
-        const response = await callGemini(userText);
-        let formatted = response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-        body.innerHTML += `<div class="chat-msg bot-msg">${formatted}</div>`;
-      } catch (error) {
-        const offlineResponse = getLocalBotResponse(userText);
-        body.innerHTML += `<div class="chat-msg bot-msg">${offlineResponse} <br><span class="text-xs text-gray-400 mt-2 block border-t pt-1">(Modo Offline)</span></div>`;
-      }
+      // Modo offline simple
+      const offlineResponse = getLocalBotResponse(userText);
+      body.innerHTML += `<div class="chat-msg bot-msg">${offlineResponse} <br><span class="text-xs text-gray-400 mt-2 block border-t pt-1">(Modo offline)</span></div>`;
+      
       typing.style.display = 'none';
       body.scrollTop = body.scrollHeight;
     }
 
     function getLocalBotResponse(text) {
       const lower = text.toLowerCase();
-      if (lower.includes('precio')) return "Asesoría 1a1: $60k. Programas: $40k.";
-      return "Modo offline activo. Pregunta por precios.";
-    }
 
-    async function callGemini(prompt) {
-      const apiKey = ""; 
-      if(!apiKey) throw new Error("No API Key");
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-      const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-      const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if(!response.ok) throw new Error("API Error");
-      const data = await response.json();
-      return data.candidates[0].content.parts[0].text;
+      if (lower.includes('precio') || lower.includes('$')) {
+        return "Asesoría 1 a 1: $60.000/mes.\nProgramas Milón/Afrodita: $40.000 por nivel o packs con descuento.\nHércules: $50.000.\nKronos: $40.000.\nHermes: $15.000.";
+      }
+
+      if (lower.includes('gluteo') || lower.includes('glúteo')) {
+        return "Para glúteos te recomiendo: Hip thrust, sentadilla búlgara, puente de cadera y peso muerto rumano. Prioriza rangos 6–12 repeticiones, 3–4 series, y mantén 1–3 repeticiones en recámara.";
+      }
+
+      if (lower.includes('fuerza') || lower.includes('1rm') || lower.includes('rm')) {
+        return "Para trabajar fuerza máxima usa rangos de 1–5 reps, 3–6 series, descansos largos (3–5 minutos) y prioriza ejercicios básicos: sentadilla, press banca, peso muerto y variantes.";
+      }
+
+      return "Modo offline activo. Escríbeme qué objetivo tienes (fuerza, hipertrofia, glúteos, tiempo reducido) y te doy una sugerencia rápida.";
     }
   </script>
 </body>
